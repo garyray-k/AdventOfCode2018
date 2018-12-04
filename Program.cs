@@ -7,10 +7,10 @@ namespace AdventOfCode
     class Program
     {
         static void Main(string[] args) {
-            // Day1 Testing - FrequencyCalibration(args);
+            // Day1 Challenge - FrequencyCalibration(args);
             string[] inputLines = ParseLinesFromInput(args);
-            // Day2Test1CharCounting(inputLines);
-            // Day2Test2CharDupeTripCounting(inputLines);
+            // Day2TChallenge1CharCounting(inputLines);
+            // Day2Challenge2CharDupeTripCounting(inputLines);
             char[] delimiterChars = { '#', '@', ',', ':', 'x' };
             int[,] fabric = new int[1000, 1000];
             int answer = 0;
@@ -51,7 +51,7 @@ namespace AdventOfCode
             Console.ReadKey();
         }
 
-        private static void Day2Test2CharDupeTripCounting(string[] inputLines) {
+        private static void Day2Challenge2CharDupeTripCounting(string[] inputLines) {
             foreach (string line in inputLines) {
                 char[] charsInLine = line.ToCharArray();
                 foreach (string comparisonLine in inputLines) {
@@ -83,7 +83,7 @@ namespace AdventOfCode
             }
         }
 
-        private static void Day2Test1CharCounting(string[] inputLines) {
+        private static void Day2Challenge1CharCounting(string[] inputLines) {
             int twoCharCounter = 0;
             int threeCharCounter = 0;
             foreach (string line in inputLines) {
