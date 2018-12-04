@@ -13,29 +13,39 @@ namespace AdventOfCode
             // Day2Test2CharDupeTripCounting(inputLines);
             char[] delimiterChars = { '#', '@', ',', ':', 'x' };
             int[,] fabric = new int[1000, 1000];
-            int overlappedFabric = 0;
+            int answer = 0;
             foreach (string line in inputLines) {
                 string[] words = line.Split(delimiterChars);
-                string uniqueId = words[1];
+                int uniqueId = Convert.ToInt32(words[1].Trim());
                 int xAxisStart = Convert.ToInt32(words[2].Trim());
                 int yAxisStart = Convert.ToInt32(words[3].Trim());
                 int width = Convert.ToInt32(words[4].Trim());
                 int length = Convert.ToInt32(words[5].Trim());
                 for (int x = (xAxisStart); x < (xAxisStart + width); x++) {
                     for (int y = (yAxisStart); y < (yAxisStart + length); y++) {
-                        fabric[x, y]++;
+                        fabric[x, y]++; 
                     }
                 }
             }
-            for (int k = 0; k < fabric.GetLength(0); k++) {
-                for (int l = 0; l < fabric.GetLength(1); l++) {
-                    Console.WriteLine("At {0}, {1} there were {2} designs.", k, l, fabric[k,l]);
-                    if (fabric[k,l] > 1) {
-                        overlappedFabric++;
+            // NOT DRY AT ALL!! Gross... Sorry.
+            foreach (string line in inputLines) {
+                string[] words = line.Split(delimiterChars);
+                int uniqueId = Convert.ToInt32(words[1].Trim());
+                int xAxisStart = Convert.ToInt32(words[2].Trim());
+                int yAxisStart = Convert.ToInt32(words[3].Trim());
+                int width = Convert.ToInt32(words[4].Trim());
+                int length = Convert.ToInt32(words[5].Trim());
+                int total = 0;
+                for (int x = (xAxisStart); x < (xAxisStart + width); x++) {
+                    for (int y = (yAxisStart); y < (yAxisStart + length); y++) {
+                        total += fabric[x, y];
                     }
                 }
+                if (total == (width * length)) {
+                    answer = uniqueId;
+                }
             }
-            Console.WriteLine("The answer is: {0}.", overlappedFabric);
+            Console.WriteLine("The answer is: {0}", answer);
             Console.WriteLine("Finished! Press Enter to continue.");
 
             Console.ReadKey();
