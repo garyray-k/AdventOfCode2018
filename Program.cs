@@ -10,12 +10,44 @@ namespace AdventOfCode
             // Day1 Testing - FrequencyCalibration(args);
             string[] inputLines = ParseLinesFromInput(args);
             // Day2Test1CharCounting(inputLines);
-            foreach (string line in inputLines) { 
+            // Day2Test2CharDupeTripCounting(inputLines);
+            char[] delimiterChars = { '#', '@', ',', ':', 'x' };
+            int[,] fabric = new int[1000, 1000];
+            int overlappedFabric = 0;
+            foreach (string line in inputLines) {
+                string[] words = line.Split(delimiterChars);
+                string uniqueId = words[1];
+                int xAxisStart = Convert.ToInt32(words[2].Trim());
+                int yAxisStart = Convert.ToInt32(words[3].Trim());
+                int width = Convert.ToInt32(words[4].Trim());
+                int length = Convert.ToInt32(words[5].Trim());
+                for (int x = (xAxisStart); x < (xAxisStart + width); x++) {
+                    for (int y = (yAxisStart); y < (yAxisStart + length); y++) {
+                        fabric[x, y]++;
+                    }
+                }
+            }
+            for (int k = 0; k < fabric.GetLength(0); k++) {
+                for (int l = 0; l < fabric.GetLength(1); l++) {
+                    Console.WriteLine("At {0}, {1} there were {2} designs.", k, l, fabric[k,l]);
+                    if (fabric[k,l] > 1) {
+                        overlappedFabric++;
+                    }
+                }
+            }
+            Console.WriteLine("The answer is: {0}.", overlappedFabric);
+            Console.WriteLine("Finished! Press Enter to continue.");
+
+            Console.ReadKey();
+        }
+
+        private static void Day2Test2CharDupeTripCounting(string[] inputLines) {
+            foreach (string line in inputLines) {
                 char[] charsInLine = line.ToCharArray();
                 foreach (string comparisonLine in inputLines) {
                     if (comparisonLine == line) {
                         continue;
-                    } 
+                    }
                     char[] charsInComparison = comparisonLine.ToCharArray();
                     if (charsInLine.Length != charsInComparison.Length) {
                         continue;
@@ -29,7 +61,7 @@ namespace AdventOfCode
                     if (numberOfSameChars == charsInLine.Length - 1) {
                         Console.WriteLine(line);
                         Console.WriteLine(comparisonLine);
-                        for (int x = 0; x < charsInLine.Length; x++) { 
+                        for (int x = 0; x < charsInLine.Length; x++) {
                             if (charsInLine[x] == charsInComparison[x]) {
                                 Console.Write(charsInLine[x]);
                             }
@@ -39,10 +71,6 @@ namespace AdventOfCode
                     }
                 }
             }
-
-            Console.WriteLine("Finished! Press Enter to continue.");
-
-            Console.ReadKey();
         }
 
         private static void Day2Test1CharCounting(string[] inputLines) {
