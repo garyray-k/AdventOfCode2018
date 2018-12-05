@@ -44,13 +44,24 @@ namespace AdventOfCode
                 }
             }
             guards = guards.OrderByDescending(x => x.minutesAsleep).ToList();
+            int maxTimes = 0;
             foreach (Guard guard in guards) {
-                Console.WriteLine("Guard {0} is asleep {1}", guard.guardID, guard.minutesAsleep);
+                // next line used for first challenge.
+                // Console.WriteLine("Guard {0} is asleep {1}", guard.guardID, guard.minutesAsleep);
+                var guardMinutes = guard.minuteMostAsleep.GroupBy(i => i);
+                foreach (var minute in guardMinutes) {
+                    if (minute.Count() > maxTimes) {
+                        maxTimes = minute.Count();
+                        Console.WriteLine("Guard {0} at minute {1} is asleep {2} times.", guard.guardID, minute.Key, minute.Count());
+                    }
+                }
             }
-            var answerGuardMinutes = guards[0].minuteMostAsleep.GroupBy(i => i);
-            foreach (var minute in answerGuardMinutes) {
-                Console.WriteLine("{0} {1}", minute.Key, minute.Count());
-            }
+
+
+            //var answerGuardMinutes = guards[0].minuteMostAsleep.GroupBy(i => i);
+            //foreach (var minute in answerGuardMinutes) {
+            //    Console.WriteLine("{0} {1}", minute.Key, minute.Count());
+            //}
             //Console.WriteLine("The answer is: {0}", answer);
             Console.WriteLine("Finished! Press Enter to continue.");
 
