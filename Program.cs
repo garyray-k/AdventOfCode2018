@@ -11,6 +11,71 @@ namespace AdventOfCode
             string[] inputLines = ParseLinesFromInput(args);
             // Day2TChallenge1CharCounting(inputLines);
             // Day2Challenge2CharDupeTripCounting(inputLines);
+            // int answer = Day3Challenges2DFabricArrayStuff(inputLines);
+            List<WatchObservationEntry> watchSchedule = ParseWatchSchedule(inputLines);
+            List<WatchObservationEntry> chronologicalWatchSchedule = watchSchedule.OrderBy(z => z.observationTime).ToList();
+            List<Guard> guards = new List<Guard> { };
+            foreach (WatchObservationEntry entry in chronologicalWatchSchedule) {
+                if (entry.activityObserved.Contains("Guard")) {
+                    string guardNumber = entry.activityObserved.Split(' ')[2];
+                    if (guards.Any(x => x.guardID == guardNumber)) {
+                        continue;
+                    }
+                    guards.Add(new Guard(guardNumber));
+                }
+            }
+            string activeGuard = " ";
+            for (int x = 0; x < chronologicalWatchSchedule.Count(); x++) {
+                Console.WriteLine("Current entry is {0} {1}", chronologicalWatchSchedule[x].observationTime, chronologicalWatchSchedule[x].activityObserved);
+                if (chronologicalWatchSchedule[x].activityObserved.Contains("Guard")) {
+                    activeGuard = chronologicalWatchSchedule[x].activityObserved.Split(' ')[2];
+                }
+                if (chronologicalWatchSchedule[x].activityObserved.Contains("asleep")) {
+                    int diff = Convert.ToInt32(chronologicalWatchSchedule[x + 1].observationTime.Subtract(chronologicalWatchSchedule[x].observationTime).TotalMinutes);
+                    int index = guards.FindIndex(c => c.guardID == activeGuard);
+                    guards.Find(i => i.guardID == activeGuard).minutesAsleep += diff;
+                    for (int min = chronologicalWatchSchedule[x].observationTime.Minute; min < (chronologicalWatchSchedule[x].observationTime.Minute + diff); min++) {
+                        guards.Find(i => i.guardID == activeGuard).minuteMostAsleep.Add(min);
+                    }
+
+                }
+                if (chronologicalWatchSchedule[x].activityObserved.Contains("wakes")) {
+                    continue;
+                }
+            }
+            guards = guards.OrderByDescending(x => x.minutesAsleep).ToList();
+            foreach (Guard guard in guards) {
+                Console.WriteLine("Guard {0} is asleep {1}", guard.guardID, guard.minutesAsleep);
+            }
+            var answerGuardMinutes = guards[0].minuteMostAsleep.GroupBy(i => i);
+            foreach (var minute in answerGuardMinutes) {
+                Console.WriteLine("{0} {1}", minute.Key, minute.Count());
+            }
+            //Console.WriteLine("The answer is: {0}", answer);
+            Console.WriteLine("Finished! Press Enter to continue.");
+
+            Console.ReadKey();
+        }
+
+        //private static List<WatchObservationEntry> OrderObservationsChronologically(List<WatchObservationEntry> observationEntries) {
+
+        //}
+
+        //private static string FindGuardMostAsleep(List<WatchObservationEntry> observations) {
+
+        //}
+
+        private static List<WatchObservationEntry> ParseWatchSchedule(string[] watchSchedule) {
+            List<WatchObservationEntry> watchObservations = new List<WatchObservationEntry> { };
+            foreach (string entry in watchSchedule) {
+                string[] splitEntry = entry.Split('[', ']');
+                WatchObservationEntry watchObservationEntry = new WatchObservationEntry(splitEntry[1], splitEntry[2]);
+                watchObservations.Add(watchObservationEntry);
+            }
+            return watchObservations;
+        }
+
+        private static int Day3Challenges2DFabricArrayStuff(string[] inputLines) {
             char[] delimiterChars = { '#', '@', ',', ':', 'x' };
             int[,] fabric = new int[1000, 1000];
             int answer = 0;
@@ -23,7 +88,7 @@ namespace AdventOfCode
                 int length = Convert.ToInt32(words[5].Trim());
                 for (int x = (xAxisStart); x < (xAxisStart + width); x++) {
                     for (int y = (yAxisStart); y < (yAxisStart + length); y++) {
-                        fabric[x, y]++; 
+                        fabric[x, y]++;
                     }
                 }
             }
@@ -45,10 +110,8 @@ namespace AdventOfCode
                     answer = uniqueId;
                 }
             }
-            Console.WriteLine("The answer is: {0}", answer);
-            Console.WriteLine("Finished! Press Enter to continue.");
 
-            Console.ReadKey();
+            return answer;
         }
 
         private static void Day2Challenge2CharDupeTripCounting(string[] inputLines) {
@@ -130,6 +193,28 @@ namespace AdventOfCode
             }
             string[] inputLines = System.IO.File.ReadAllLines(args[0]);
             return inputLines;
+        }
+    }
+
+    internal class Guard {
+        public int minutesAsleep { get; set; }
+        public List<int> minuteMostAsleep { get; set; }
+        public string guardID { get; set; }
+
+        public Guard(string guardId) {
+            guardID = guardId;
+            minutesAsleep = 0;
+            minuteMostAsleep = new List<int> { };
+        }
+    }
+
+    internal class WatchObservationEntry {
+        public DateTime observationTime { get; set; }
+        public string activityObserved { get; set; }
+
+        public WatchObservationEntry(string dateAndTime, string activity) {
+            observationTime = Convert.ToDateTime(dateAndTime);
+            activityObserved = activity;
         }
     }
 }
