@@ -8,10 +8,33 @@ namespace AdventOfCode
     {
         static void Main(string[] args) {
             // Day1 Challenge - FrequencyCalibration(args);
-            string[] inputLines = ParseLinesFromInput(args);
+            //string[] inputLines = ParseLinesFromInput(args);
             // Day2TChallenge1CharCounting(inputLines);
             // Day2Challenge2CharDupeTripCounting(inputLines);
             // int answer = Day3Challenges2DFabricArrayStuff(inputLines);
+            //Day4Challenges(inputLines);
+            if (args.Length == 0) {
+                throw new NullReferenceException("Must use console argument for input.");
+            }
+            string input = System.IO.File.ReadAllText(args[0]);
+            StartOver:
+            for (int i = 0; i < input.Length - 1; i++) {
+                bool isUpperAndLower = (Char.IsUpper(input[i]) && Char.IsLower(input[i + 1])) || (Char.IsUpper(input[i + 1]) && Char.IsLower(input[i]));
+                if (isUpperAndLower) {
+                    if (Char.ToLower(input[i]) == Char.ToLower(input[i + 1])) {
+                        Console.WriteLine("Removing: {0} {1}", input[i], input[i + 1]);
+                        input.Remove(i, 2);
+                        goto StartOver;
+                    }
+                }
+            }
+            Console.WriteLine("The answer is: {0}", input.Length);
+            Console.WriteLine("Finished! Press Enter to continue.");
+
+            Console.ReadKey();
+        }
+
+        private static void Day4Challenges(string[] inputLines) {
             List<WatchObservationEntry> watchSchedule = ParseWatchSchedule(inputLines);
             List<WatchObservationEntry> chronologicalWatchSchedule = watchSchedule.OrderBy(z => z.observationTime).ToList();
             List<Guard> guards = new List<Guard> { };
@@ -56,16 +79,6 @@ namespace AdventOfCode
                     }
                 }
             }
-
-
-            //var answerGuardMinutes = guards[0].minuteMostAsleep.GroupBy(i => i);
-            //foreach (var minute in answerGuardMinutes) {
-            //    Console.WriteLine("{0} {1}", minute.Key, minute.Count());
-            //}
-            //Console.WriteLine("The answer is: {0}", answer);
-            Console.WriteLine("Finished! Press Enter to continue.");
-
-            Console.ReadKey();
         }
 
         //private static List<WatchObservationEntry> OrderObservationsChronologically(List<WatchObservationEntry> observationEntries) {
