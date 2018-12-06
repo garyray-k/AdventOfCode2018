@@ -4,8 +4,7 @@ using System.Linq;
 
 namespace AdventOfCode
 {
-    class Program
-    {
+    class Program {
         static void Main(string[] args) {
             // Day1 Challenge - FrequencyCalibration(args);
             //string[] inputLines = ParseLinesFromInput(args);
@@ -17,18 +16,38 @@ namespace AdventOfCode
                 throw new NullReferenceException("Must use console argument for input.");
             }
             string input = System.IO.File.ReadAllText(args[0]);
-            StartOver:
-            for (int i = 0; i < input.Length - 1; i++) {
-                bool isUpperAndLower = (Char.IsUpper(input[i]) && Char.IsLower(input[i + 1])) || (Char.IsUpper(input[i + 1]) && Char.IsLower(input[i]));
-                if (isUpperAndLower) {
-                    if (Char.ToLower(input[i]) == Char.ToLower(input[i + 1])) {
-                        Console.WriteLine("Removing: {0} {1}", input[i], input[i + 1]);
-                        input.Remove(i, 2);
-                        goto StartOver;
+            string defaultInput = System.IO.File.ReadAllText(args[0]);
+            string alphabet = "abcdefghijklmnopqrstuvwxyz";
+            Dictionary<char, int> maxLetter = new Dictionary<char, int> { };
+            foreach (var letter in alphabet) {
+                input = System.IO.File.ReadAllText(args[0]).Trim();
+                maxLetter.Add(letter, 0);
+                Console.WriteLine("Begin length ({0}): {1}", letter, input.Length );
+                for (int i = 0; i < input.Length; i++) {
+                    if (Char.ToLower(letter) == input[i]) {
+                        input = input.Remove(i, 1);
+                    }
+                    if (Char.ToUpper(letter) == input[i]) {
+                        input = input.Remove(i, 1);
                     }
                 }
+                //Console.WriteLine("Remove {0} length: {1}", letter, input.Length);
+                StartOver:
+                for (int i = 0; i < input.Length - 1; i++) {
+                    bool isUpperAndLower = (Char.IsUpper(input[i]) && Char.IsLower(input[i + 1])) || (Char.IsUpper(input[i + 1]) && Char.IsLower(input[i]));
+                    if (isUpperAndLower) {
+                        if (Char.ToLower(input[i]) == Char.ToLower(input[i + 1])) {
+                            //Console.WriteLine("Removing: {0} {1}", input[i], input[i + 1]);
+                            input = input.Remove(i, 2);
+                            goto StartOver;
+                        }
+                    }
+                }
+                maxLetter[letter] = input.Length;
+                Console.WriteLine("The letter {0} gives us a length of: {1}", letter, input.Length );
             }
-            Console.WriteLine("The answer is: {0}", input.Length);
+
+            Console.WriteLine("The answer is: {0}", maxLetter.Values.Min());
             Console.WriteLine("Finished! Press Enter to continue.");
 
             Console.ReadKey();
