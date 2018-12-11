@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="HTML-PagesWithInstructions\" />
+    <Folder Include="ChallengeInputs\" />
+    <Folder Include="src\" />
+    <Folder Include="src\Day1\" />
+    <Folder Include="src\Day2\" />
+    <Folder Include="src\Day3\" />
+    <Folder Include="src\Day4\" />
+    <Folder Include="src\Day5\" />
+    <Folder Include="src\Day6\" />
+    <Folder Include="src\Utilities\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.11.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="test.txt" />
+  </ItemGroup>
+</Project>
